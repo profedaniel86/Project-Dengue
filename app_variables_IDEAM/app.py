@@ -4,9 +4,11 @@ from dash import dcc, html
 import pandas as pd
 import plotly.express as px
 from dash.dependencies import Input, Output
+import glob
 
-# Cargar datos
-df = pd.read_csv("datos_agrupados_sem.csv", parse_dates=['fecha_sem'])
+# 🔁 Cargar y consolidar todos los CSV
+csv_files = sorted(glob.glob("ddatos_agrupados_sem*.csv"))
+df = pd.concat([pd.read_csv(f, parse_dates=["fecha_sem"]) for f in csv_files], ignore_index=True)
 
 # Crear app
 app = dash.Dash(__name__)
