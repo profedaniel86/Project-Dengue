@@ -17,7 +17,7 @@ server = app.server
 
 # Layout
 app.layout = html.Div([
-    html.H2("Serie temporal por variable"),
+    html.H2("DAGMA - Serie temporal por variable"),
     dcc.Dropdown(
         id='variable-dropdown',
         options=[{'label': var, 'value': var} for var in sorted(df['variable'].dropna().unique())],
