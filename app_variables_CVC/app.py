@@ -8,7 +8,7 @@ import glob
 
 # Cargar CSVs
 csv_files = sorted(glob.glob("ddatos_agrupados_sem*.csv"))
-df = pd.concat([pd.read_csv(f, parse_dates=["semana_epi"]) for f in csv_files], ignore_index=True)
+df = pd.concat([pd.read_csv(f, parse_dates=["semana_epid"]) for f in csv_files], ignore_index=True)
 
 # Crear app
 app = dash.Dash(__name__)
@@ -51,7 +51,7 @@ def actualizar_grafico(variable, estaciones):
 
     fig = px.line(
         df_filtrado,
-        x='semana_epi',
+        x='semana_epid',
         y='valor_mean',
         color='estacion',
         title=f"Serie temporal - {variable}",
