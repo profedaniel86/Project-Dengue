@@ -15,7 +15,7 @@ server = app.server
 
 # Layout
 app.layout = html.Div([
-    html.H2("Serie temporal por variable y estación"),
+    html.H2("DAGMA - Serie temporal por variable y estación"),
 
     dcc.Dropdown(
         id='variable-dropdown',
@@ -50,10 +50,10 @@ def actualizar_grafico(variable, estaciones):
 
     fig = px.line(
         df_filtrado,
-        x='semana_epid',
+        x='semana_epi',
         y='valor_mean',
         color='estacion',
-        title=f"DAGMA-Serie temporal - {variable}",
+        title=f"Serie temporal - {variable}",
         labels={'semana_epi': 'Semana Epidemiológica', 'valor_mean': 'Valor Promedio', 'estacion': 'Estación'}
     )
     fig.update_layout(height=600)
