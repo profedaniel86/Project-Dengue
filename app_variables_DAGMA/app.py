@@ -53,7 +53,7 @@ def actualizar_grafico(variable, estaciones):
         x='semana_epid',
         y='valor_mean',
         color='estacion',
-        title=f"Serie temporal - {variable}",
+        title=f"DAGMA-Serie temporal - {variable}",
         labels={'semana_epi': 'Semana Epidemiológica', 'valor_mean': 'Valor Promedio', 'estacion': 'Estación'}
     )
     fig.update_layout(height=600)
