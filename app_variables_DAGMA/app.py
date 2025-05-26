@@ -1,4 +1,3 @@
-
 import dash
 from dash import dcc, html
 import pandas as pd
@@ -9,7 +8,6 @@ import glob
 # 🔁 Cargar y consolidar todos los CSV
 csv_files = sorted(glob.glob("ddatos_agrupados_sem*.csv"))
 df = pd.concat([pd.read_csv(f, parse_dates=["semana_epi"]) for f in csv_files], ignore_index=True)
-
 
 # Crear app
 app = dash.Dash(__name__)
@@ -24,16 +22,26 @@ app.layout = html.Div([
         value=sorted(df['variable'].dropna().unique())[0],
         style={'width': '70%', 'margin-bottom': '20px'}
     ),
+    dcc.Dropdown(
+        id='estacion-dropdown',
+        options=[{'label': est, 'value': est} for est in sorted(df['estacion'].dropna().unique())],
+        value=sorted(df['estacion'].dropna().unique()),
+        multi=True,
+        style={'width': '70%', 'margin-bottom': '20px'}
+    ),
     dcc.Graph(id='serie-temporal')
 ])
 
 # Callback
 @app.callback(
     Output('serie-temporal', 'figure'),
-    Input('variable-dropdown', 'value')
+    [Input('variable-dropdown', 'value'),
+     Input('estacion-dropdown', 'value')]
 )
-def actualizar_grafico(variable):
-    df_filtrado = df[df['variable'] == variable]
+def actualizar_grafico(variable, estaciones):
+    if not estaciones:
+        return px.line(title="Seleccione al menos una estación")
+    df_filtrado = df[(df['variable'] == variable) & (df['estacion'].isin(estaciones))]
     fig = px.line(
         df_filtrado,
         x='semana_epi',
