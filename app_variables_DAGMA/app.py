@@ -15,20 +15,24 @@ server = app.server
 
 # Layout
 app.layout = html.Div([
-    html.H2("DAGMA - Serie temporal por variable"),
+    html.H2("Serie temporal por variable y estación"),
+
     dcc.Dropdown(
         id='variable-dropdown',
         options=[{'label': var, 'value': var} for var in sorted(df['variable'].dropna().unique())],
         value=sorted(df['variable'].dropna().unique())[0],
-        style={'width': '70%', 'margin-bottom': '20px'}
+        style={'width': '60%', 'margin-bottom': '15px'}
     ),
+
     dcc.Dropdown(
         id='estacion-dropdown',
         options=[{'label': est, 'value': est} for est in sorted(df['estacion'].dropna().unique())],
-        value=sorted(df['estacion'].dropna().unique()),
+        value=[],
         multi=True,
-        style={'width': '70%', 'margin-bottom': '20px'}
+        placeholder='Selecciona una o más estaciones...',
+        style={'width': '60%', 'margin-bottom': '25px'}
     ),
+
     dcc.Graph(id='serie-temporal')
 ])
 
@@ -39,16 +43,18 @@ app.layout = html.Div([
      Input('estacion-dropdown', 'value')]
 )
 def actualizar_grafico(variable, estaciones):
-    if not estaciones:
-        return px.line(title="Seleccione al menos una estación")
-    df_filtrado = df[(df['variable'] == variable) & (df['estacion'].isin(estaciones))]
+    df_filtrado = df[df['variable'] == variable]
+
+    if estaciones:
+        df_filtrado = df_filtrado[df_filtrado['estacion'].isin(estaciones)]
+
     fig = px.line(
         df_filtrado,
-        x='semana_epi',
+        x='semana_epid',
         y='valor_mean',
         color='estacion',
         title=f"Serie temporal - {variable}",
-        labels={'semana_epi': 'Fecha Semana', 'valor_mean': 'Valor Promedio', 'estacion': 'Estación'}
+        labels={'semana_epi': 'Semana Epidemiológica', 'valor_mean': 'Valor Promedio', 'estacion': 'Estación'}
     )
     fig.update_layout(height=600)
     return fig
